@@ -1,0 +1,56 @@
+----- for all servers----------------
+ADD new HDD on all severs
+
+mkdir /mnt/disk1
+ 
+#format and create filesystem in disk1 - 
+fdisk /dev/sdb (press m  n   p  w   it will create /sdb1) then
+ext
+
+
+#mount /dev/sdb1 /mnt/disk1
+
+
+#nano /etc/hosts
+
+192.168.82.118  server1
+192.168.82.119  server2
+192.168.82.120  server3
+192.168.82.121  client
+systemctl stop firewalld
+
+
+# yum install wget
+# yum install centos-release-gluster -y
+# yum install epel-release -y
+# yum install glusterfs-server -y
+
+# systemctl start glusterd
+# systemctl enable glusterd
+
+gluster peer probe server1
+gluster peer probe server2
+
+gluster peer status
+gluster pool list
+
+mkdir /mnt/disk1/diskvol      #on all server
+
+--------- for only one server---------------------------------------------------
+gluster volume create gdisk1 replica 3 server1:/mnt/disk1/diskvol/gdisk1  server2:/mnt/disk1/distvol/gdisk1  server3:/mnt/disk1/distvol/gdisk1
+gluster volume start gdisk1
+#above cmd require 'force' at the end as a third party
+#                           or
+#          it saves file randomly on any server
+gluster volume create gdisk2 server1:/mnt/disk1/gdisk2 server2:/mnt/disk1/gdisk2 server3:/mnt/disk1/gdisk2
+
+gluster volume info gdisk1
+
+#on client 
+yum install glusterfs-fuse
+
+mkdir /mnt/gdrive
+mount -t glusterfs server1:/gdisk1 /mnt/gdrive
+#create multiples in gdrive and look in gdrive of server1 or 2 or 3
+
+
