@@ -1,0 +1,27 @@
+#nano /etc/hosts
+
+192.168.76.xxx  server1.example.com server1
+192.168.76.xxx  server2.example.com server2
+192.168.76.xxx  server3.example.com server3
+192.168.76.xxx  client.example.com client
+
+# yum install wget
+# yum install centos-release-gluster -y
+# yum install epel-release -y
+# yum install glusterfs-server -y
+
+# systemctl start glusterd
+# systemctl enable glusterd
+
+gluster peer probe server2.example.com
+gluster peer probe server3.example.com
+
+gluster peer status
+
+mkdir /mnt/disk1/diskvol-1
+
+gluster volume create distvol-2 replica 2 server2.example.com:/mnt/disk1/distvol-2server2.example.com:/mnt/disk1/distvol-2 server3.example.com:/mnt/disk1/distvol-2
+gluster volume start distvol-2
+
+gluster volume info distvol-2
+
